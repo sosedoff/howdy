@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -15,14 +16,17 @@ const (
 
 var (
 	ConfigsPath       string
+	SingleConfigPath  string
 	ShowVersion       bool
 	SendNotifications bool
+	TestMode          bool
 )
 
 func init() {
 	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
 	flag.BoolVar(&ShowVersion, "v", false, "Show version")
 	flag.BoolVar(&SendNotifications, "n", true, "Send notifications")
+	flag.BoolVar(&TestMode, "t", false, "Test mode")
 	flag.Parse()
 
 	if ShowVersion {
@@ -31,11 +35,22 @@ func init() {
 	}
 
 	if ConfigsPath == "" {
-		log.Fatalln("Please specify path to configs directory")
+		if len(flag.Args()) == 0 {
+			log.Fatalln("Please specify path to configs directory")
+		} else {
+			SingleConfigPath = flag.Args()[0]
+		}
 	}
+
+	if !SendNotifications {
+		log.Println("Will not send any notifications")
+	}
+
+	ConfigsPath = strings.Replace(ConfigsPath, "~", os.Getenv("HOME"), 1)
+	SingleConfigPath = strings.Replace(SingleConfigPath, "~", os.Getenv("HOME"), 1)
 }
 
-func main() {
+func runAll() {
 	file, err := os.Open(ConfigsPath)
 	if err != nil {
 		log.Fatalln(err)
@@ -48,10 +63,6 @@ func main() {
 
 	if !stat.IsDir() {
 		log.Fatalln("Path is not a directory")
-	}
-
-	if !SendNotifications {
-		log.Println("Will not send any notifications")
 	}
 
 	files, err := ioutil.ReadDir(ConfigsPath)
@@ -70,5 +81,22 @@ func main() {
 		}
 
 		RunConfig(config)
+	}
+}
+
+func runSingle() {
+	config, err := ReadConfig(SingleConfigPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	RunConfig(config)
+}
+
+func main() {
+	if ConfigsPath != "" {
+		runAll()
+	} else {
+		runSingle()
 	}
 }

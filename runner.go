@@ -28,12 +28,11 @@ func RunCheck(config *Config, check Check) {
 }
 
 func RunConfig(config *Config) {
-	if !config.Enabled {
+	if TestMode || config.Enabled {
+		for _, check := range config.Checks {
+			RunCheck(config, check)
+		}
+	} else {
 		log.Println("Skipping config:", config.Name)
-		return
-	}
-
-	for _, check := range config.Checks {
-		RunCheck(config, check)
 	}
 }
