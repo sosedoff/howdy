@@ -14,13 +14,15 @@ const (
 )
 
 var (
-	ConfigsPath string
-	ShowVersion bool
+	ConfigsPath       string
+	ShowVersion       bool
+	SendNotifications bool
 )
 
 func init() {
 	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
 	flag.BoolVar(&ShowVersion, "v", false, "Show version")
+	flag.BoolVar(&SendNotifications, "n", true, "Send notifications")
 	flag.Parse()
 
 	if ShowVersion {
@@ -46,6 +48,10 @@ func main() {
 
 	if !stat.IsDir() {
 		log.Fatalln("Path is not a directory")
+	}
+
+	if !SendNotifications {
+		log.Println("Will not send any notifications")
 	}
 
 	files, err := ioutil.ReadDir(ConfigsPath)

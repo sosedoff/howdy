@@ -16,10 +16,12 @@ func RunCheck(config *Config, check Check) {
 			check.Name(), config.Name, err.Error(),
 		)
 
-		for _, notifier := range config.Notifiers {
-			err = notifier.Perform(msg)
-			if err != nil {
-				log.Println("Notifier failed:", err)
+		if SendNotifications {
+			for _, notifier := range config.Notifiers {
+				err = notifier.Perform(msg)
+				if err != nil {
+					log.Println("Notifier failed:", err)
+				}
 			}
 		}
 	}
