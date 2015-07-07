@@ -45,6 +45,10 @@ func ReadConfig(path string) (*Config, error) {
 			for _, item := range items {
 				config.Checks = append(config.Checks, ParsePingCheck(item))
 			}
+		case "dns":
+			for _, item := range items {
+				config.Checks = append(config.Checks, ParseDnsCheck(item))
+			}
 		default:
 			return nil, fmt.Errorf("Invalid check type:", t)
 		}
