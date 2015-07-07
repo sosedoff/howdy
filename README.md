@@ -2,6 +2,15 @@
 
 Experimental YAML-based service monitoring thingy.
 
+## Install
+
+OSX:
+
+```
+wget -O /usr/local/bin/howdy https://github.com/sosedoff/howdy/releases/download/0.1.0/howdy_darwin_amd64
+chmod +x /usr/local/bin/howdy
+```
+
 ## Config
 
 All stuff goes into config:
