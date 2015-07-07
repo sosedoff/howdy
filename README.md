@@ -26,6 +26,9 @@ checks:
       status: 200
       format: json
 
+    # formats are: html, json, xml
+    # or it could be anything that's included into Content-Type response header
+
   # check if host is reachable
   ping:
     - host: myapp.com
