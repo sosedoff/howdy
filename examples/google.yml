@@ -1,0 +1,23 @@
+name: google
+enabled: true
+
+checks:
+  web:
+    - url: http://google.com
+      status: 200
+
+    - url: https://google.com/?format=json
+      status: 200
+      format: json
+
+    - url: https://www.google.com/?q=foobar
+      status: 400
+
+  dns:
+    - domain: google.com
+      ip: 74.125.202.113
+
+  ping:
+    - host: 74.125.202.110
+    - host: 74.125.202.111
+    - host: 74.125.202.112
