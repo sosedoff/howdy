@@ -52,3 +52,33 @@ checks:
     - domain: myapp.com
       ip: 1.2.3.4
 ```
+
+## Usage
+
+See all available options:
+
+```
+$ howdy -v
+
+Usage of howdy:
+  -c="": Path to all configs
+  -n=true: Send notifications
+  -t=false: Test mode
+  -v=false: Show version
+```
+
+Run checks on all configs:
+
+```
+$ howdy -c /path/to/configs
+```
+
+Or run checks on a single config:
+
+```
+$ howdy /path/to/config.yml
+```
+
+## License
+
+MIT
