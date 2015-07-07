@@ -23,6 +23,10 @@ func ParsePingCheck(data map[string]interface{}) PingCheck {
 	return check
 }
 
+func (check PingCheck) Name() string {
+	return "PING"
+}
+
 func (check PingCheck) Perform() error {
 	log.Printf("Performing PING check for ip=%v\n", check.Host)
 	if check.Host == "" {

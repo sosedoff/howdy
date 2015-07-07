@@ -25,6 +25,10 @@ func ParseDnsCheck(data map[string]interface{}) DnsCheck {
 	return check
 }
 
+func (check DnsCheck) Name() string {
+	return "DNS"
+}
+
 func (check DnsCheck) Perform() error {
 	if check.Domain == "" {
 		return fmt.Errorf("Domain should not be empty")

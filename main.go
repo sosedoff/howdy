@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 )
@@ -20,9 +21,20 @@ func main() {
 		}
 
 		for _, check := range config.Checks {
-			err := check.Perform()
+			err = check.Perform()
 			if err != nil {
 				log.Println("Check failed:", err)
+				msg := fmt.Sprintf(
+					"%v check failed for %v: %v",
+					check.Name(), config.Name, err.Error(),
+				)
+
+				for _, notifier := range config.Notifiers {
+					err = notifier.Perform(msg)
+					if err != nil {
+						log.Println("Notifier failed:", err)
+					}
+				}
 			}
 		}
 	}

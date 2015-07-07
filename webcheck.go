@@ -35,6 +35,10 @@ func ParseWebCheck(data map[string]interface{}) WebCheck {
 	return check
 }
 
+func (check WebCheck) Name() string {
+	return "WEB"
+}
+
 func (check WebCheck) Perform() error {
 	log.Printf(
 		"Performing WEB check for url=%v status=%v format=%v\n",

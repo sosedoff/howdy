@@ -8,13 +8,19 @@ import (
 )
 
 type Check interface {
+	Name() string
 	Perform() error
 }
 
+type Notifier interface {
+	Perform(string) error
+}
+
 type Config struct {
-	Name    string  `yaml:"name"`
-	Enabled bool    `yaml:"enabled"`
-	Checks  []Check `yaml:"-"`
+	Name      string     `yaml:"name"`
+	Enabled   bool       `yaml:"enabled"`
+	Checks    []Check    `yaml:"-"`
+	Notifiers []Notifier `yaml:"-"`
 }
 
 func ReadConfig(path string) (*Config, error) {
@@ -29,7 +35,8 @@ func ReadConfig(path string) (*Config, error) {
 	}
 
 	checks := struct {
-		Checks map[string][]map[string]interface{} `yaml:"checks"`
+		Checks    map[string][]map[string]interface{} `yaml:"checks"`
+		Notifiers map[string]map[string]interface{}   `yaml:"notify"`
 	}{}
 	if err = yaml.Unmarshal(data, &checks); err != nil {
 		return nil, err
@@ -51,6 +58,15 @@ func ReadConfig(path string) (*Config, error) {
 			}
 		default:
 			return nil, fmt.Errorf("Invalid check type:", t)
+		}
+	}
+
+	for t, items := range checks.Notifiers {
+		switch t {
+		case "slack":
+			config.Notifiers = append(config.Notifiers, ParseSlackNotifier(items))
+		default:
+			return nil, fmt.Errorf("Invalid notifier type:", t)
 		}
 	}
 
