@@ -1,41 +1,51 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
-func main() {
-	base := "./configs"
+var (
+	ConfigsPath string
+)
 
-	files, err := ioutil.ReadDir(base)
+func init() {
+	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
+	flag.Parse()
+
+	if ConfigsPath == "" {
+		log.Fatalln("Please specify path to configs directory")
+	}
+}
+
+func main() {
+	file, err := os.Open(ConfigsPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	stat, err := file.Stat()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if !stat.IsDir() {
+		log.Fatalln("Path is not a directory")
+	}
+
+	files, err := ioutil.ReadDir(ConfigsPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	for _, file := range files {
-		config, err := ReadConfig(base + "/" + file.Name())
+		config, err := ReadConfig(ConfigsPath + "/" + file.Name())
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		for _, check := range config.Checks {
-			err = check.Perform()
-			if err != nil {
-				log.Println("Check failed:", err)
-				msg := fmt.Sprintf(
-					"%v check failed for %v: %v",
-					check.Name(), config.Name, err.Error(),
-				)
-
-				for _, notifier := range config.Notifiers {
-					err = notifier.Perform(msg)
-					if err != nil {
-						log.Println("Notifier failed:", err)
-					}
-				}
-			}
-		}
+		RunConfig(config)
 	}
 }
