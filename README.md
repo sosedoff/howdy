@@ -11,6 +11,12 @@ name: myapp
 enabled: true
 period: 5m
 
+notify:
+  slack:
+    webhook: "https://hooks.slack.com/services/..."
+    # channel is optional
+    channel: "#myapp"
+
 checks:
   # check live urls
   web:
