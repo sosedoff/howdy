@@ -21,7 +21,7 @@ checks:
       status: 403
 
     # specify code and format
-    - url http://api.myapp.com/v1/foobar
+    - url: http://api.myapp.com/v1/foobar
       status: 200
       format: json
 
