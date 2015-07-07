@@ -9,6 +9,7 @@ All stuff goes into config:
 ```yml
 name: myapp
 enabled: true
+period: 5m
 
 checks:
   # check live urls
