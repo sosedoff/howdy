@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 var (
@@ -41,6 +42,10 @@ func main() {
 	}
 
 	for _, file := range files {
+		if filepath.Ext(file.Name()) != ".yml" {
+			continue
+		}
+
 		config, err := ReadConfig(ConfigsPath + "/" + file.Name())
 		if err != nil {
 			log.Fatalln(err)
