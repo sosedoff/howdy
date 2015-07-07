@@ -2,19 +2,31 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 )
 
+const (
+	VERSION = "0.1.0"
+)
+
 var (
 	ConfigsPath string
+	ShowVersion bool
 )
 
 func init() {
 	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
+	flag.BoolVar(&ShowVersion, "v", false, "Show version")
 	flag.Parse()
+
+	if ShowVersion {
+		fmt.Println("Version:", VERSION)
+		os.Exit(0)
+	}
 
 	if ConfigsPath == "" {
 		log.Fatalln("Please specify path to configs directory")
