@@ -9,7 +9,6 @@ All stuff goes into config:
 ```yml
 name: myapp
 enabled: true
-period: 5m
 
 notify:
   slack:

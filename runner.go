@@ -26,6 +26,11 @@ func RunCheck(config *Config, check Check) {
 }
 
 func RunConfig(config *Config) {
+	if !config.Enabled {
+		log.Println("Skipping config:", config.Name)
+		return
+	}
+
 	for _, check := range config.Checks {
 		RunCheck(config, check)
 	}
