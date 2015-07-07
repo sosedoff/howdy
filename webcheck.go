@@ -56,12 +56,18 @@ func (check WebCheck) Perform() error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != check.Status {
-		return fmt.Errorf("Expected HTTP status: %v, got: %v", check.Status, resp.StatusCode)
+		return fmt.Errorf(
+			"Expected HTTP status %v for %v, got: %v",
+			check.Status, check.Url, resp.StatusCode,
+		)
 	}
 
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.Contains(contentType, check.Format) {
-		return fmt.Errorf("Expected HTTP format '%v' to include '%v'", contentType, check.Format)
+		return fmt.Errorf(
+			"Expected HTTP format '%v' for %v to include '%v'",
+			contentType, check.Url, check.Format,
+		)
 	}
 
 	return nil
