@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sync"
 )
 
 func RunCheck(config *Config, check Check) {
@@ -27,12 +28,11 @@ func RunCheck(config *Config, check Check) {
 	}
 }
 
-func RunConfig(config *Config) {
-	if TestMode || config.Enabled {
-		for _, check := range config.Checks {
-			RunCheck(config, check)
+func RunConfig(config *Config, wg *sync.WaitGroup) {
+	for _, check := range config.Checks {
+		RunCheck(config, check)
+		if wg != nil {
+			wg.Done()
 		}
-	} else {
-		log.Println("Skipping config:", config.Name)
 	}
 }

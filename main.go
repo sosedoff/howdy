@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 const (
@@ -70,18 +71,29 @@ func runAll() {
 		log.Fatalln(err)
 	}
 
+	wg := sync.WaitGroup{}
+	wg.Add(len(files))
+
 	for _, file := range files {
 		if filepath.Ext(file.Name()) != ".yml" {
+			wg.Done()
 			continue
 		}
 
 		config, err := ReadConfig(ConfigsPath + "/" + file.Name())
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
+			continue
 		}
 
-		RunConfig(config)
+		if TestMode || config.Enabled {
+			go RunConfig(config, &wg)
+		} else {
+			log.Println("Skipping config:", config.Name)
+		}
 	}
+
+	wg.Wait()
 }
 
 func runSingle() {
@@ -90,7 +102,7 @@ func runSingle() {
 		log.Fatalln(err)
 	}
 
-	RunConfig(config)
+	RunConfig(config, nil)
 }
 
 func main() {
