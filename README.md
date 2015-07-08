@@ -4,10 +4,16 @@ Experimental YAML-based service monitoring thingy.
 
 ## Install
 
-OSX:
+Via go:
 
 ```
-wget -O /usr/local/bin/howdy https://github.com/sosedoff/howdy/releases/download/0.1.0/howdy_darwin_amd64
+go get github.com/sosedoff/howdy
+```
+
+Or download a [binary release](releases):
+
+```
+wget -O /usr/local/bin/howdy RELEASE_URL
 chmod +x /usr/local/bin/howdy
 ```
 
