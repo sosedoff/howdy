@@ -57,6 +57,15 @@ checks:
   dns:
     - domain: myapp.com
       ip: 1.2.3.4
+
+  # check if port is reachable. default timeout is 5 seconds
+  port:
+    - host: myapp.com
+      port: 22
+
+    - host: 127.0.0.1
+      port: 5000
+      net: udp # default is tcp
 ```
 
 ## Usage
