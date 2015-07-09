@@ -21,3 +21,13 @@ checks:
     - host: 74.125.202.110
     - host: 74.125.202.111
     - host: 74.125.202.112
+
+  port:
+    - host: google.com
+      port: 80
+
+    - host: google.com
+      port: 443
+
+    - host: google.com
+      port: 5000
