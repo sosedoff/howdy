@@ -34,7 +34,7 @@ notify:
 checks:
   # check live urls
   web:
-    # just simple ur
+    # simple url
     - url: http://myapp.com/
 
     # specify expected http status code
@@ -43,7 +43,7 @@ checks:
 
     # specify code and format
     - url: http://api.myapp.com/v1/foobar
-      status: 200
+      status: 200 # default
       format: json
 
     # formats are: html, json, xml
