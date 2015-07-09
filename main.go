@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -18,13 +19,17 @@ const (
 var (
 	ConfigsPath       string
 	SingleConfigPath  string
+	LogPath           string
 	ShowVersion       bool
 	SendNotifications bool
 	TestMode          bool
+	LogFile           *os.File
+	LogWriter         *bufio.Writer
 )
 
 func init() {
 	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
+	flag.StringVar(&LogPath, "l", "", "Path to log")
 	flag.BoolVar(&ShowVersion, "v", false, "Show version")
 	flag.BoolVar(&SendNotifications, "n", true, "Send notifications")
 	flag.BoolVar(&TestMode, "t", false, "Test mode")
@@ -33,6 +38,18 @@ func init() {
 	if ShowVersion {
 		fmt.Println("Version:", VERSION)
 		os.Exit(0)
+	}
+
+	if LogPath != "" {
+		fd, err := os.OpenFile(LogPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		LogFile = fd
+		LogWriter = bufio.NewWriter(LogFile)
+
+		log.SetOutput(LogWriter)
 	}
 
 	if ConfigsPath == "" {
@@ -105,7 +122,19 @@ func runSingle() {
 	RunConfig(config, nil)
 }
 
+func cleanup() {
+	if LogWriter != nil {
+		LogWriter.Flush()
+	}
+
+	if LogFile != nil {
+		LogFile.Close()
+	}
+}
+
 func main() {
+	defer cleanup()
+
 	if ConfigsPath != "" {
 		runAll()
 	} else {
