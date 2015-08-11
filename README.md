@@ -94,6 +94,11 @@ Or run checks on a single config:
 $ howdy /path/to/config.yml
 ```
 
+## TODO
+
+- Add support for notifications via email
+- Add ability to detect service recovery. That will require having a DB.
+
 ## License
 
 MIT
