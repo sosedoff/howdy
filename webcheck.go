@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +12,15 @@ type WebCheck struct {
 	Url    string `yaml:"url"`
 	Status int    `yaml:"status"`
 	Format string `yaml:"format"`
+}
+
+func init() {
+	// TODO: Make sure SSL verification works. This is just a workaround.
+	cfg := &tls.Config{InsecureSkipVerify: true}
+
+	http.DefaultClient.Transport = &http.Transport{
+		TLSClientConfig: cfg,
+	}
 }
 
 func ParseWebCheck(data map[string]interface{}) WebCheck {
