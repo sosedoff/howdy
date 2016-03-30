@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type WebCheck struct {
@@ -21,6 +22,8 @@ func init() {
 	http.DefaultClient.Transport = &http.Transport{
 		TLSClientConfig: cfg,
 	}
+
+	http.DefaultClient.Timeout = time.Second * 10
 }
 
 func ParseWebCheck(data map[string]interface{}) WebCheck {
