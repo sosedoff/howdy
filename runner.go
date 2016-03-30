@@ -64,7 +64,7 @@ func RunConfig(config *Config, wg *sync.WaitGroup) {
 		}
 	}
 
-	if SendNotifications {
+	if SendNotifications && len(messages) > 0 {
 		for _, notifier := range config.Notifiers {
 			err := notifier.Perform(messages)
 			if err != nil {
