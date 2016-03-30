@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -17,6 +18,9 @@ const (
 )
 
 var (
+	RunId             int64
+	DbPath            string
+	StartServer       bool
 	ConfigsPath       string
 	SingleConfigPath  string
 	LogPath           string
@@ -28,11 +32,15 @@ var (
 )
 
 func init() {
+	RunId = time.Now().Unix()
+
 	flag.StringVar(&ConfigsPath, "c", "", "Path to all configs")
 	flag.StringVar(&LogPath, "l", "", "Path to log")
 	flag.BoolVar(&ShowVersion, "v", false, "Show version")
 	flag.BoolVar(&SendNotifications, "n", true, "Send notifications")
 	flag.BoolVar(&TestMode, "t", false, "Test mode")
+	flag.BoolVar(&StartServer, "s", false, "Start server")
+	flag.StringVar(&DbPath, "d", "howdy.sqlite3", "Path to database")
 	flag.Parse()
 
 	if ShowVersion {
@@ -66,6 +74,12 @@ func init() {
 
 	ConfigsPath = strings.Replace(ConfigsPath, "~", os.Getenv("HOME"), 1)
 	SingleConfigPath = strings.Replace(SingleConfigPath, "~", os.Getenv("HOME"), 1)
+
+	// Setup database connection
+	err := dbSetup()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func runAll() {
@@ -88,7 +102,7 @@ func runAll() {
 		log.Fatalln(err)
 	}
 
-	wg := sync.WaitGroup{}
+	wg := &sync.WaitGroup{}
 	wg.Add(len(files))
 
 	for _, file := range files {
@@ -99,14 +113,15 @@ func runAll() {
 
 		config, err := ReadConfig(ConfigsPath + "/" + file.Name())
 		if err != nil {
-			log.Println(err)
+			log.Println("Error reading config:", err)
 			continue
 		}
 
 		if TestMode || config.Enabled {
-			go RunConfig(config, &wg)
+			go RunConfig(config, wg)
 		} else {
 			log.Println("Skipping config:", config.Name)
+			wg.Done()
 		}
 	}
 
@@ -134,6 +149,11 @@ func cleanup() {
 
 func main() {
 	defer cleanup()
+
+	if StartServer {
+		runHttpServer()
+		return
+	}
 
 	if ConfigsPath != "" {
 		runAll()

@@ -37,7 +37,7 @@ func (check PortCheck) Name() string {
 
 func (check PortCheck) Perform() error {
 	log.Printf(
-		"Performing %v check for host=%v net=%v port=%v\n",
+		"[%v] host=%v net=%v port=%v\n",
 		check.Name(), check.Host, check.Network, check.Port,
 	)
 

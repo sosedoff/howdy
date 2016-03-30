@@ -13,7 +13,7 @@ type Check interface {
 }
 
 type Notifier interface {
-	Perform(string) error
+	Perform([]string) error
 }
 
 type Config struct {

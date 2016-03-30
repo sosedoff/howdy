@@ -25,7 +25,7 @@ func (check PingCheck) Name() string {
 }
 
 func (check PingCheck) Perform() error {
-	log.Printf("Performing %v check for ip=%v\n", check.Name(), check.Host)
+	log.Printf("[%v] ip=%v\n", check.Name(), check.Host)
 	if check.Host == "" {
 		return fmt.Errorf("Host should not be empty")
 	}

@@ -38,7 +38,7 @@ func (check DnsCheck) Perform() error {
 		return fmt.Errorf("IP should not be empty")
 	}
 
-	log.Printf("Performing DNS check for domain=%v ip=%v\n", check.Domain, check.Ip)
+	log.Printf("[%v] domain=%v ip=%v\n", check.Name(), check.Domain, check.Ip)
 
 	addr, err := net.ResolveIPAddr("ip4:icmp", check.Domain)
 	if err != nil {

@@ -54,8 +54,8 @@ func (check WebCheck) Name() string {
 
 func (check WebCheck) Perform() error {
 	log.Printf(
-		"Performing WEB check for url=%v status=%v format=%v\n",
-		check.Url, check.Status, check.Format,
+		"[%v] url=%v status=%v format=%v\n",
+		check.Name(), check.Url, check.Status, check.Format,
 	)
 
 	if check.Url == "" {

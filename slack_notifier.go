@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type SlackNotifier struct {
@@ -26,10 +27,14 @@ func ParseSlackNotifier(data map[string]interface{}) SlackNotifier {
 	return notifier
 }
 
-func (notifier SlackNotifier) Perform(message string) error {
-	payload := map[string]string{
-		"text":     message,
-		"username": "service-health",
+func (notifier SlackNotifier) Perform(messages []string) error {
+	payload := map[string]interface{}{
+		"unfurl_links": false,
+		"username":     "service-health",
+		"attachments": map[string]string{
+			"color": "danger",
+			"text":  strings.Join(messages, "\n"),
+		},
 	}
 
 	if notifier.Channel != "" {
