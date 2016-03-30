@@ -73,13 +73,19 @@ checks:
 See all available options:
 
 ```
-$ howdy -v
+$ howdy --help
 
-Usage of howdy:
-  -c="": Path to all configs
-  -n=true: Send notifications
-  -t=false: Test mode
-  -v=false: Show version
+Usage of ./howdy:
+  -c string
+      Path to all configs
+  -d string
+      Path to database (default "howdy.sqlite3")
+  -l string
+      Path to log
+  -n  Send notifications (default true)
+  -s  Start server
+  -t  Test mode
+  -v  Show version
 ```
 
 Run checks on all configs:
