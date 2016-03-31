@@ -26,7 +26,7 @@ func Round(val float64, roundOn float64, places int) (newVal float64) {
 func RunCheck(config *Config, check Check) string {
 	ts := time.Now()
 	err := check.Perform()
-	duration := Round(time.Since(ts).Seconds()*1000, .5, 2)
+	duration := Round(time.Since(ts).Seconds(), .5, 2)
 
 	record := CheckRecord{
 		RunId:     RunId,
