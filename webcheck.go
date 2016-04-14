@@ -23,7 +23,7 @@ func init() {
 		TLSClientConfig: cfg,
 	}
 
-	http.DefaultClient.Timeout = time.Second * 10
+	http.DefaultClient.Timeout = time.Second * 20
 }
 
 func ParseWebCheck(data map[string]interface{}) WebCheck {
